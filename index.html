@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Messenger</title>
+<style>
+:root{--primary:#246bfe;--primary2:#7047ff;--bg:#f2f5fb;--card:#fff;--text:#17233d;--muted:#7c879e;--line:#e8edf5;--bubble:#edf2fb}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input{font:inherit}button{cursor:pointer;border:0}
+.app{height:100vh;min-height:580px;display:grid;grid-template-columns:280px 340px minmax(320px,1fr);max-width:1500px;margin:auto;background:var(--card);box-shadow:0 12px 50px #253b6510}
+.sidebar{padding:24px 18px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:24px}
+.brand{display:flex;align-items:center;gap:11px;font-size:20px;font-weight:800;letter-spacing:-.5px}.logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--primary),var(--primary2));display:grid;place-items:center;color:white;font-size:22px}
+.profile{display:flex;align-items:center;gap:12px;padding:14px;background:#f7f9fe;border-radius:16px}.avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;background:#dbe5ff;display:grid;place-items:center;color:#3157a8;font-weight:700;flex-shrink:0}.profile strong,.contact strong{display:block;font-size:14px}.muted{font-size:12px;color:var(--muted);margin-top:4px}.online-dot{display:inline-block;width:8px;height:8px;background:#20c780;border-radius:50%;margin-right:5px}
+.nav{display:grid;gap:8px}.nav button{padding:12px 14px;border-radius:12px;background:transparent;text-align:left;color:#6c7890;font-weight:650}.nav button.active,.nav button:hover{background:#edf3ff;color:var(--primary)}
+.sidebar-bottom{margin-top:auto;color:var(--muted);font-size:12px;line-height:1.6}
+.list-panel{border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0}.list-header{padding:25px 22px 14px}.list-header h1{margin:0 0 16px;font-size:24px}.search{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 14px;outline:none;background:#f8faff}.search:focus,.composer input:focus{border-color:#9ab8ff}
+.contacts{overflow:auto;padding:4px 10px 18px}.contact{display:flex;align-items:center;gap:12px;padding:13px 12px;border-radius:14px;cursor:pointer}.contact:hover,.contact.selected{background:#edf3ff}.contact .avatar{width:48px;height:48px}.contact-info{min-width:0;flex:1}.contact-top{display:flex;justify-content:space-between;gap:6px}.contact-top time{font-size:11px;color:var(--muted);white-space:nowrap}.last-message{font-size:12px;color:var(--muted);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.badge{font-size:10px;background:var(--primary);color:white;padding:3px 6px;border-radius:20px}
+.chat{display:flex;flex-direction:column;min-width:0;background:#fbfcff}.chat-header{padding:18px 25px;display:flex;align-items:center;gap:12px;background:white;border-bottom:1px solid var(--line)}.chat-header .avatar{width:46px;height:46px}.chat-person{flex:1}.chat-actions{display:flex;gap:8px}.icon-btn{width:38px;height:38px;border-radius:12px;background:#f0f5ff;color:var(--primary);font-size:18px}.icon-btn:hover{background:#dfeaff}
+.messages{padding:26px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:14px;background:radial-gradient(ellipse at top right,#edf3ff70,transparent 55%)}.day-label{text-align:center;font-size:11px;color:var(--muted);margin:0 0 8px}.message{max-width:min(72%,480px);padding:12px 15px;border-radius:17px;background:white;box-shadow:0 3px 12px #1b32620a;line-height:1.45;font-size:14px;overflow-wrap:anywhere}.message .stamp{display:block;font-size:10px;color:var(--muted);text-align:right;margin-top:5px}.message.mine{align-self:flex-end;background:linear-gradient(135deg,var(--primary),var(--primary2));color:white;border-bottom-right-radius:5px}.message.mine .stamp{color:#e2e9ff}.message.theirs{align-self:flex-start;border-bottom-left-radius:5px}.empty-state{margin:auto;text-align:center;color:var(--muted);max-width:260px}.empty-state .big{font-size:42px;margin-bottom:12px}
+.composer-wrap{padding:16px 22px 20px;background:white;border-top:1px solid var(--line)}.composer{display:flex;align-items:center;gap:10px}.composer input{flex:1;min-width:0;border:1px solid var(--line);background:#f8faff;border-radius:14px;padding:14px 16px;outline:none}.send{background:linear-gradient(135deg,var(--primary),var(--primary2));color:white;border-radius:13px;padding:13px 19px;font-weight:700}.hint{font-size:10px;color:#a0a9ba;margin-top:9px;text-align:center}
+@media(max-width:950px){.app{grid-template-columns:80px 300px minmax(300px,1fr)}.sidebar{padding:20px 12px;align-items:center}.brand span,.profile .profile-text,.nav .nav-label,.sidebar-bottom{display:none}.profile{padding:8px;background:transparent}.nav button{font-size:0;text-align:center;width:48px;height:48px;padding:0}.nav button:before{font-size:19px}.nav button[data-icon="chats"]:before{content:"💬"}.nav button[data-icon="calls"]:before{content:"☎️"}.nav button[data-icon="people"]:before{content:"👥"}.nav button[data-icon="settings"]:before{content:"⚙️"}}
+@media(max-width:680px){.app{height:100dvh;min-height:0;display:flex;flex-direction:column}.sidebar{display:none}.list-panel{border-right:0;flex:1}.chat{display:none;flex:1}.app.chat-open .list-panel{display:none}.app.chat-open .chat{display:flex}.list-header{padding:18px 18px 10px}.chat-header{padding:12px 14px}.messages{padding:18px 14px}.composer-wrap{padding:12px}.message{max-width:85%}.back-btn{display:block!important}.contact{padding:11px}.list-header h1{font-size:22px}}
+.back-btn{display:none}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">●</div><span>My Messenger</span></div>
+    <div class="profile"><div class="avatar">TM</div><div class="profile-text"><strong id="profileName">Tushar Murmu</strong><div class="muted"><span class="online-dot"></span>Active now</div></div></div>
+    <nav class="nav">
+      <button class="active" data-icon="chats"><span class="nav-label">💬 &nbsp; Chats</span></button>
+      <button data-icon="calls"><span class="nav-label">☎️ &nbsp; Calls</span></button>
+      <button data-icon="people"><span class="nav-label">👥 &nbsp; People</span></button>
+      <button data-icon="settings" id="settingsBtn"><span class="nav-label">⚙️ &nbsp; Settings</span></button>
+    </nav>
+    <div class="sidebar-bottom">Your personal space to chat, share and stay connected.<br><br>Prototype v1.0</div>
+  </aside>
+  <section class="list-panel">
+    <div class="list-header"><h1>Messages</h1><input class="search" id="search" placeholder="🔎  Search chats..." aria-label="Search chats"></div>
+    <div class="contacts" id="contacts"></div>
+  </section>
+  <main class="chat">
+    <header class="chat-header">
+      <button class="icon-btn back-btn" id="backBtn" aria-label="Back to chats">←</button>
+      <div class="avatar" id="chatAvatar">R</div>
+      <div class="chat-person"><strong id="chatName">Rafsan</strong><div class="muted" id="chatStatus"><span class="online-dot"></span>Online</div></div>
+      <div class="chat-actions"><button class="icon-btn" title="Audio call" onclick="demoAction('Audio call')">☎</button><button class="icon-btn" title="Video call" onclick="demoAction('Video call')">▣</button><button class="icon-btn" title="More options" onclick="demoAction('More options')">⋯</button></div>
+    </header>
+    <section class="messages" id="messages" aria-live="polite"></section>
+    <div class="composer-wrap"><form class="composer" id="sendForm"><input id="messageInput" placeholder="Type a message..." autocomplete="off" aria-label="Type a message"><button class="send" type="submit">Send ➤</button></form><div class="hint">Demo app · Messages are saved in this browser only</div></div>
+  </main>
+</div>
+<script>
+const starterContacts = [
+ {id:1,name:"Rafsan",initials:"R",online:true,preview:"Hey! How are you?",time:"9:24 AM",unread:2,messages:[{from:"theirs",text:"Hey! How are you?",time:"9:20 AM"},{from:"mine",text:"I'm good! 😊 What about you?",time:"9:22 AM"},{from:"theirs",text:"Doing great. What are you up to?",time:"9:24 AM"}]},
+ {id:2,name:"Tania Akter",initials:"TA",online:true,preview:"Sent a photo",time:"8:56 AM",unread:0,messages:[{from:"theirs",text:"Good morning! ☀️",time:"8:50 AM"},{from:"mine",text:"Good morning, Tania!",time:"8:53 AM"},{from:"theirs",text:"Sent a photo",time:"8:56 AM"}]},
+ {id:3,name:"Asif",initials:"A",online:false,preview:"🎤 Voice message (0:12)",time:"Yesterday",unread:0,messages:[{from:"theirs",text:"Are we meeting tomorrow?",time:"Yesterday"}]},
+ {id:4,name:"Nusrat Jahan",initials:"NJ",online:false,preview:"Okay bro 👍",time:"Yesterday",unread:0,messages:[{from:"mine",text:"Thanks for helping!",time:"Yesterday"},{from:"theirs",text:"Okay bro 👍",time:"Yesterday"}]},
+ {id:5,name:"Tanvir",initials:"T",online:true,preview:"Happy Birthday! 🎂",time:"Mon",unread:0,messages:[{from:"theirs",text:"Happy Birthday! 🎂🎉",time:"Mon"}]},
+ {id:6,name:"Sadia",initials:"S",online:false,preview:"See you soon",time:"Mon",unread:0,messages:[{from:"theirs",text:"See you soon!",time:"Mon"}]}
+];
+let contacts;
+try{contacts=JSON.parse(localStorage.getItem("myMessengerContacts"))||starterContacts}catch(e){contacts=starterContacts}
+let activeId=contacts[0]?.id;
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem("myMessengerContacts",JSON.stringify(contacts))}
+function activeContact(){return contacts.find(c=>c.id===activeId)}
+function renderContacts(){
+ const q=$("search").value.toLowerCase();
+ $("contacts").innerHTML="";
+ contacts.filter(c=>c.name.toLowerCase().includes(q)||c.preview.toLowerCase().includes(q)).forEach(c=>{
+  const el=document.createElement("div");el.className="contact"+(c.id===activeId?" selected":"");el.innerHTML=`<div class="avatar">${escapeHtml(c.initials)}</div><div class="contact-info"><div class="contact-top"><strong>${escapeHtml(c.name)}</strong><time>${escapeHtml(c.time||"Now")}</time></div><div class="last-message">${escapeHtml(c.preview)}</div></div>${c.unread?`<span class="badge">${c.unread}</span>`:""}`;
+  el.onclick=()=>selectContact(c.id);$("contacts").appendChild(el)
+ })
+}
+function renderMessages(){
+ const c=activeContact();if(!c)return;
+ $("chatName").textContent=c.name;$("chatAvatar").textContent=c.initials;
+ $("chatStatus").innerHTML=c.online?'<span class="online-dot"></span>Online':'Offline';
+ const box=$("messages");box.innerHTML='<div class="day-label">TODAY</div>';
+ c.messages.forEach(m=>{const el=document.createElement("div");el.className="message "+(m.from==="mine"?"mine":"theirs");el.innerHTML=`${escapeHtml(m.text)}<span class="stamp">${escapeHtml(m.time||"Now")}</span>`;box.appendChild(el)});
+ box.scrollTop=box.scrollHeight;
+}
+function selectContact(id){activeId=id;const c=activeContact();c.unread=0;renderContacts();renderMessages();save();$("app").classList.add("chat-open")}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]))}
+$("search").addEventListener("input",renderContacts);
+$("sendForm").addEventListener("submit",e=>{e.preventDefault();const input=$("messageInput"),text=input.value.trim();if(!text)return;const c=activeContact();c.messages.push({from:"mine",text,time:new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})});c.preview=text;c.time="Now";save();renderContacts();renderMessages();input.value=""});
+$("backBtn").onclick=()=>$("app").classList.remove("chat-open");
+$("settingsBtn").onclick=()=>{const current=$("profileName").textContent;const name=prompt("Enter your display name:",current);if(name&&name.trim()){$("profileName").textContent=name.trim();alert("Display name updated in this demo. To make it permanent, connect a real account system.");}};
+function demoAction(action){alert(action+" is a demo button. Real calls need a backend and calling service.");}
+renderContacts();renderMessages();
+if(window.innerWidth<=680)$("app").classList.remove("chat-open");
+</script>
+</body>
+</html>
