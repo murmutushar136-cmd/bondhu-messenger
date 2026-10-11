@@ -22,7 +22,28 @@ button,input{font:inherit}button{cursor:pointer;border:0}
 @media(max-width:950px){.app{grid-template-columns:80px 300px minmax(300px,1fr)}.sidebar{padding:20px 12px;align-items:center}.brand span,.profile .profile-text,.nav .nav-label,.sidebar-bottom{display:none}.profile{padding:8px;background:transparent}.nav button{font-size:0;text-align:center;width:48px;height:48px;padding:0}.nav button:before{font-size:19px}.nav button[data-icon="chats"]:before{content:"💬"}.nav button[data-icon="calls"]:before{content:"☎️"}.nav button[data-icon="people"]:before{content:"👥"}.nav button[data-icon="settings"]:before{content:"⚙️"}}
 @media(max-width:680px){.app{height:100dvh;min-height:0;display:flex;flex-direction:column}.sidebar{display:none}.list-panel{border-right:0;flex:1}.chat{display:none;flex:1}.app.chat-open .list-panel{display:none}.app.chat-open .chat{display:flex}.list-header{padding:18px 18px 10px}.chat-header{padding:12px 14px}.messages{padding:18px 14px}.composer-wrap{padding:12px}.message{max-width:85%}.back-btn{display:block!important}.contact{padding:11px}.list-header h1{font-size:22px}}
 .back-btn{display:none}
-</style>
+</style> 
+  
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+  import { getAuth } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCTB6A24C6srIGTq225JvvYprA0jVtoH3o",
+    authDomain: "bondhu-messenger-5494a.firebaseapp.com",
+    projectId: "bondhu-messenger-5494a",
+    storageBucket: "bondhu-messenger-5494a.firebasestorage.app",
+    messagingSenderId: "242750520315",
+    appId: "1:242750520315:web:ca77e44b25d0634dcca95e",
+    measurementId: "G-4NSDLBYTRB"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+</script>
+
 </head>
 <body>
 <div class="app" id="app">
